@@ -55,6 +55,64 @@ class Solution_Mst {
         return str.toString();
     }
 
+    // 面试题 01.04. 回文排列
+    // set 去重，偶数情况直接去除，最后判断 set 的 size()
+    // 位运算，用两个 long 判断 128 位的字符，一个 long 位数为 64位 (8字节)，int 为 32位
+    public boolean canPermutePalindrome(String s) {
+        int[] chs = new int[128];
+
+        for (char ch : s.toCharArray()) {
+            chs[ch] += 1;
+        }
+
+        boolean flag = false;
+        for (int i : chs) {
+            if (i % 2 == 1) {
+                if (!flag) flag = true;
+                else return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean canPermutePalindrome_opt(String s) {
+        int[] map = new int[128];
+        int count = 0;
+        for (char ch : s.toCharArray()) {
+            //如果当前位置的字符数量是奇数，再加上当前字符
+            //正好是偶数，表示消掉一个，我们就把count减一，
+            //否则count就加一
+            if ((map[ch]++ & 1) == 1) {
+                count--;
+            } else {
+                count++;
+            }
+        }
+        return count <= 1;
+    }
+
+    // 面试题 01.05. 一次编辑
+    // 动态规划，双指针模拟
+    public boolean oneEditAway(String first, String second) {
+        if (Math.abs(first.length() - second.length()) > 1) return false;
+
+        int[][] dp = new int[first.length() + 1][second.length() + 1];
+
+        for (int i = 1; i < first.length(); i++) dp[0][i] = i - 1;
+        for (int j = 1; j < second.length(); j++) dp[j][0] = j - 1;
+
+        for (int i = 1; i <= first.length(); i++) {
+            for (int j = 1; j <= second.length(); j++) {
+                if (first.charAt(i - 1) == second.charAt(j - 1)) dp[i][j] = dp[i - 1][j - 1];
+                else dp[i][j] = dp[i - 1][j - 1] + 1;
+                dp[i][j] = Math.min(dp[i][j], dp[i - 1][j] + 1);
+                dp[i][j] = Math.min(dp[i][j], dp[i][j - 1] + 1);
+            }
+        }
+
+        return dp[first.length()][second.length()] <= 1;
+    }
+
 }
 
 public class LeetCode_Mst {
@@ -64,6 +122,6 @@ public class LeetCode_Mst {
         Solution_Mst solution = new Solution_Mst();
         int[] nums1 = new int[]{23,2,6,4,7};
         int[] nums2 = new int[]{2};
-        System.out.println(solution.isUnique("abcdef"));
+        System.out.println(solution.oneEditAway("pale", "ple"));
     }
 }
