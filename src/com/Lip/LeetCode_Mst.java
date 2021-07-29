@@ -1,5 +1,7 @@
 package com.Lip;
 
+import java.util.HashSet;
+
 class Solution_Mst {
 
     // 面试题 01.01. 判定字符是否唯一
@@ -112,6 +114,69 @@ class Solution_Mst {
 
         return dp[first.length()][second.length()] <= 1;
     }
+
+    // 面试题 01.06. 字符串压缩
+    // StringBuilder, 比较前后是否一致
+    public String compressString(String S) {
+        StringBuilder str = new StringBuilder();
+
+        for (int i = 0; i < S.length(); i++) {
+            int n = 1;
+            while (i + 1 < S.length() && S.charAt(i) == S.charAt(i + 1)) {
+                n += 1;
+                i += 1;
+            }
+            str.append(S.charAt(i));
+            str.append(n);
+        }
+
+        return S.length() <= str.length() ? S : str.toString();
+    }
+
+    // 面试题 01.07. 旋转矩阵
+    // 原地旋转，for (int i = 0; i < n/2; i++)，for (int j = 0; j < (n+1)/2; j++)
+    // matrix[i][j] << matrix[n - j - 1][i] << matrix[n - i - 1][n - j - 1] << matrix[j][n - i - 1]
+    public void rotate(int[][] matrix) {
+        int n = matrix.length;
+        int mid = n / 2;
+
+        for (int i = 0; i < n/2; i++) {
+            for (int j = 0; j < (n+1)/2; j++) {
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[n - j - 1][i];
+                matrix[n - j - 1][i] = matrix[n - i - 1][n - j - 1];
+                matrix[n - i - 1][n - j - 1] = matrix[j][n - i - 1];
+                matrix[j][n - i - 1] = temp;
+            }
+        }
+    }
+
+    // 面试题 01.08. 零矩阵
+    // HashSet, 遍历两次，第一次保存 0 的行列值，第二次将对应行列置 0
+    // HashSet >> boolean[]，优化思路
+    public void setZeroes(int[][] matrix) {
+        HashSet<Integer> row = new HashSet<>();
+        HashSet<Integer> col = new HashSet<>();
+
+        int m = matrix.length, n = matrix[0].length;
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == 0) {
+                    row.add(i);
+                    col.add(j);
+                }
+            }
+        }
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (row.contains(i) || col.contains(j)) matrix[i][j] = 0;
+            }
+        }
+    }
+
+    //
 
 }
 
