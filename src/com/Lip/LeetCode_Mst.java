@@ -198,7 +198,25 @@ class Solution_Mst {
     }
 
     // 面试题 02.01. 移除重复节点
+    // HashSet, 存储所有出现过的节点，ListNode dummy, ListNode pre
+    public ListNode removeDuplicateNodes(ListNode head) {
+        HashSet<Integer> set = new HashSet<>();
+        ListNode dummy = new ListNode(-1);
+        ListNode pre = dummy;
+        dummy.next = head;
 
+        while (head != null) {
+            if (set.contains(head.val)) {
+                head = head.next;
+                pre.next = head;
+            } else {
+                set.add(head.val);
+                pre = head;
+                head = head.next;
+            }
+        }
+        return dummy.next;
+    }
 }
 
 public class LeetCode_Mst {
