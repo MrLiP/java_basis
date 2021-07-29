@@ -154,6 +154,7 @@ class Solution_Mst {
     // 面试题 01.08. 零矩阵
     // HashSet, 遍历两次，第一次保存 0 的行列值，第二次将对应行列置 0
     // HashSet >> boolean[]，优化思路
+    // 优化思路，利用矩阵的第一行和第一列来代替之前的标记数组
     public void setZeroes(int[][] matrix) {
         HashSet<Integer> row = new HashSet<>();
         HashSet<Integer> col = new HashSet<>();
@@ -176,7 +177,27 @@ class Solution_Mst {
         }
     }
 
-    //
+    // 面试题 01.09. 字符串轮转
+    // 先判断长度是否相同，不相同返回false，其次拼接两个s2，则如果是由s1旋转而成，则拼接后的s一定包含s1
+    // String s = s1 + s2;  return s.contains(s1);
+    public boolean isFlipedString(String s1, String s2) {
+        if (s1.length() != s2.length()) return false;
+        if (s1.equals(s2) || s1.length() == 0) return true;
+
+        for (int i = 0; i < s1.length(); i++) {
+            int j = 0;
+            if (s2.charAt(i) == s1.charAt(j)) {
+                while (j < s2.length() && s2.charAt((i + j) % s2.length()) == s1.charAt(j)) {
+                    j++;
+                }
+                if (j == s2.length()) return true;
+            }
+        }
+
+        return false;
+    }
+
+    // 面试题 02.01. 移除重复节点
 
 }
 
@@ -187,6 +208,6 @@ public class LeetCode_Mst {
         Solution_Mst solution = new Solution_Mst();
         int[] nums1 = new int[]{23,2,6,4,7};
         int[] nums2 = new int[]{2};
-        System.out.println(solution.oneEditAway("pale", "ple"));
+        System.out.println(solution.isFlipedString("waterbottle", "erbottlewat"));
     }
 }
