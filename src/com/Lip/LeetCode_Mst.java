@@ -217,6 +217,27 @@ class Solution_Mst {
         }
         return dummy.next;
     }
+
+    // 面试题 02.02. 返回倒数第 k 个节点
+    // 快慢指针，slow = k-- <= 0 ? slow.next : slow;
+    public int kthToLast(ListNode head, int k) {
+        ListNode fast = head;
+        for (int i = 0; i < k; i ++) {
+            fast = fast.next;
+        }
+        while (fast != null) {
+            fast = fast.next;
+            head = head.next;
+        }
+        return head.val;
+    }
+
+    // 面试题 02.03. 删除中间节点
+    // 将自己变为下一节点，再将下一节点剔除
+    public void deleteNode(ListNode node) {
+        node.val=node.next.val;
+        node.next=node.next.next;
+    }
 }
 
 public class LeetCode_Mst {
