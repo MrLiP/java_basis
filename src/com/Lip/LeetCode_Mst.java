@@ -238,6 +238,36 @@ class Solution_Mst {
         node.val=node.next.val;
         node.next=node.next.next;
     }
+
+    // 面试题 02.04. 分割链表
+    // 快慢指针，直接在当前列表上操作
+    // 或维护两个链表，small 链表按顺序存储所有小于 xx 的节点，large 链表按顺序存储所有大于等于 x 的节点，最后拼接
+    public ListNode partition(ListNode head, int x) {
+        ListNode dum = new ListNode(-1);
+        dum.next = head;
+        ListNode fast = dum, slow = dum;
+
+        while (fast.next != null) {
+            if (fast.next.val >= x) {
+                fast = fast.next;
+            } else {
+                if (slow == fast) {
+                    slow = slow.next;
+                    fast = fast.next;
+                } else {
+                    ListNode cur = fast.next;
+                    fast.next = fast.next.next;
+                    cur.next = slow.next;
+                    slow.next = cur;
+                    slow = slow.next;
+                }
+            }
+        }
+
+        return dum.next;
+    }
+
+
 }
 
 public class LeetCode_Mst {
