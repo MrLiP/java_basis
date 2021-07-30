@@ -267,7 +267,133 @@ class Solution_Mst {
         return dum.next;
     }
 
+    // 面试题 02.05. 链表求和
+    // 根据位次依次求和，设置进位符号 flag，分多种情况讨论
+    // 优化，while 循环条件 while(l1 != null || l2 != null || x != 0), 然后依据是否为 null 分开讨论，只关注当前位的和
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        if (l1 == null) return l2;
+        if (l2 == null) return l1;
+        ListNode dum = new ListNode(-1);
+        ListNode cur = dum;
+        int flag = 0;
+        while (l1 != null && l2 != null) {
+            int temp = l1.val + l2.val + flag;
+            flag = temp / 10;
+            cur.next = new ListNode(temp % 10);
+            cur = cur.next;
+            l1 = l1.next;
+            l2 = l2.next;
+        }
 
+        if (l1 == null) l1 = l2;
+        if (flag == 0) {
+            cur.next = l1;
+        } else {
+            while (flag != 0 && l1 != null) {
+                if (l1.val == 9) {
+                    cur.next = new ListNode(0);
+                } else {
+                    cur.next = new ListNode(l1.val + 1);
+                    flag = 0;
+                }
+                cur = cur.next;
+                l1 = l1.next;
+            }
+            if (flag == 1) cur.next = new ListNode(1);
+            else cur.next = l1;
+        }
+        return dum.next;
+    }
+
+    public ListNode addTwoNumbers_opt(ListNode l1, ListNode l2) {
+        int x = 0;  // 进位
+        ListNode dummy = new ListNode(0);   // 哑节点
+        ListNode node = dummy;
+
+        while(l1 != null || l2 != null || x != 0) {
+            int sum = x;    // 当前位的和
+            if (l1 != null) {
+                sum += l1.val;
+                l1 = l1.next;
+            }
+            if (l2 != null) {
+                sum += l2.val;
+                l2 = l2.next;
+            }
+            node.next = new ListNode(sum % 10);
+            x = sum / 10;
+            node = node.next;
+        }
+        return dummy.next;
+    }
+
+    // 面试题 02.06. 回文链表
+    // 快慢指针找前半部分链表的尾结点
+    // 反转后半部分链表
+    // 判断是否回文，（恢复链表）
+    public boolean isPalindrome(ListNode head) {
+        if (head == null) {
+            return true;
+        }
+
+        // 找到前半部分链表的尾节点并反转后半部分链表
+        ListNode firstHalfEnd = endOfFirstHalf(head);
+        ListNode secondHalfStart = reverseList(firstHalfEnd.next);
+
+        // 判断是否回文
+        ListNode p1 = head;
+        ListNode p2 = secondHalfStart;
+        boolean result = true;
+        while (result && p2 != null) {
+            if (p1.val != p2.val) {
+                result = false;
+            }
+            p1 = p1.next;
+            p2 = p2.next;
+        }
+
+        // 还原链表并返回结果
+        firstHalfEnd.next = reverseList(secondHalfStart);
+        return result;
+    }
+
+    private ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        while (curr != null) {
+            ListNode nextTemp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nextTemp;
+        }
+        return prev;
+    }
+
+    private ListNode endOfFirstHalf(ListNode head) {
+        ListNode fast = head;
+        ListNode slow = head;
+        while (fast.next != null && fast.next.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        return slow;
+    }
+
+    // 面试题 02.07. 链表相交
+    // 只要以相同的速度前进，就一定有机会遇见你
+    // 无交点时，会一直执行到两个链表的末尾，curA, curB 都为null,也会跳出循环
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode curA = headA, curB = headB;
+
+        while (curA != curB) {
+            if (curA == null) curA = headB;
+            else curA = curA.next;
+            if (curB == null) curB = headA;
+            else curB = curB.next;
+        }
+
+        return curA;
+    }
 }
 
 public class LeetCode_Mst {
@@ -277,6 +403,9 @@ public class LeetCode_Mst {
         Solution_Mst solution = new Solution_Mst();
         int[] nums1 = new int[]{23,2,6,4,7};
         int[] nums2 = new int[]{2};
-        System.out.println(solution.isFlipedString("waterbottle", "erbottlewat"));
+        ListNode l1 = new ListNode(1);
+        l1.next = new ListNode(2);
+        l1.next.next = new ListNode(1);
+        System.out.println(solution.isPalindrome(l1));
     }
 }
