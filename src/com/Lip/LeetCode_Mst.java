@@ -1,6 +1,7 @@
 package com.Lip;
 
 import java.util.HashSet;
+import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
@@ -443,7 +444,37 @@ class Solution_Mst {
     // 栈的特性是 FILO（先进后出），队列的特性是 FIFO（先进先出）
     // 用两个栈来模拟队列的特性，一个栈为入队栈，一个栈为出对栈
 
+    // 面试题 03.05. 栈排序
+    // 辅助栈，每次插入一个新元素，把它放到它应该放到的位置
+    // List.sort((o1, o2) -> (o2 - o1))
 
+    // 面试题 03.06. 动物收容所
+    // 双队列，用 int 存储年龄
+    // 编号就代表年龄，所以不需要额外存储年龄。。。
+
+    // 面试题 04.01. 节点间通路
+    // 首先设置访问状态数组 visited，使用DFS「深度优先搜索」进行递归搜索，逐渐压缩搜索区间
+    // visited 目的是为了防止出现闭环
+    // 采用DFS解决的过程中，应当注意当正序递归搜索时，会出现超时的情况，所以采用逆序搜索的方法
+    // if (graph[i][1] == target && helper(graph, start, graph[i][0], visited)) return true;
+    public boolean findWhetherExistsPath(int n, int[][] graph, int start, int target) {
+        boolean[] visited = new boolean[graph.length];
+        return helper(graph, start, target, visited);
+    }
+
+    private boolean helper(int[][] graph, int start, int target, boolean[] visited) {
+        for (int i = 0; i < graph.length; i++) {
+            if (!visited[i]) {
+                if (graph[i][0] == start && graph[i][1] == target) return true;
+                visited[i] = true;
+                if (graph[i][1] == target && helper(graph, start, graph[i][0], visited)) return true;
+                visited[i] = false;
+            }
+        }
+        return false;
+    }
+
+    //
 }
 
 public class LeetCode_Mst {
