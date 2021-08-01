@@ -1,32 +1,50 @@
 package com.Lip;
 
 import java.util.Scanner;
+import java.util.Stack;
 
 
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int m = sc.nextInt();
-        ListNode head = new ListNode(sc.nextInt());
-        ListNode cur = head;
-        for(int i = 1; i < n; i++){
-            cur.next = new ListNode(sc.nextInt());
-            cur = cur.next;
+        String str = sc.nextLine();
+        System.out.println(solution_1(str));
+
+//        System.out.print(solution("[][[]2]2"));
+    }
+
+    // 数箱子，[][[][][]2]3 >> 16
+    private static int solution_1(String str) {
+        int ans = 0;
+//        Stack<Character> chs = new Stack<Character>();
+        Stack<Integer> stack = new Stack<>();
+        stack.add(0);
+
+        char[] charr = str.toCharArray();
+
+        for (int i = 0; i < charr.length; i++) {
+            char ch = str.charAt(i);
+
+            if (ch == '[') {
+//                chs.push(ch);
+                stack.push(1);
+            } else if (ch == ']') {
+                if (i < charr.length - 1 && str.charAt(i + 1) > '0' && str.charAt(i + 1) <= '9') {
+                    int a = stack.pop();
+                    int multi = str.charAt(i + 1) - '0';
+                    stack.push(a * multi);
+                    i++;
+                }
+                int fst = stack.pop();
+                int snd = stack.pop();
+                stack.push(fst + snd);
+            }
+        }
+        int num = stack.size();
+        for (int i = 0; i < num; i++) {
+            ans += stack.pop();
         }
 
-        ListNode dummy = new ListNode(0);
-        dummy.next = head;
-        head = dummy;
-        for (int i = 1; i < m; i++) {
-            head = head.next;
-        }
-        head.next = head.next.next;
-
-        for (int i = 0; i < n - 1; i++) {
-            dummy = dummy.next;
-            System.out.print(dummy.val);
-            System.out.print(" ");
-        }
+        return ans;
     }
 }

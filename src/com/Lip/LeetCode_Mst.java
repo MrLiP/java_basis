@@ -1,6 +1,8 @@
 package com.Lip;
 
 import java.util.HashSet;
+import java.util.Set;
+import java.util.Stack;
 
 class Solution_Mst {
 
@@ -394,6 +396,54 @@ class Solution_Mst {
 
         return curA;
     }
+
+    // 面试题 02.08. 环路检测
+    // HashSet, 快慢指针
+    // a=c+(n-1)(b+c)a=c+(n−1)(b+c)
+    public ListNode detectCycle(ListNode head) {
+        Set<ListNode> set = new HashSet<>();
+
+        while (head != null) {
+            if (set.contains(head)) return head;
+            set.add(head);
+            head = head.next;
+        }
+        return null;
+    }
+
+    public ListNode detectCycle_opt(ListNode head) {
+        if (head == null) return null;
+        ListNode slow = head, fast = head;
+        while (fast != null) {
+            slow = slow.next;
+            if (fast.next != null) {
+                fast = fast.next.next;
+            } else {
+                return null;
+            }
+            if (fast == slow) {
+                ListNode ptr = head;
+                while (ptr != slow) {
+                    ptr = ptr.next;
+                    slow = slow.next;
+                }
+                return ptr;
+            }
+        }
+        return null;
+    }
+
+    // 面试题 03.01. 三合一
+    // 三个一位数组，或二维数组
+
+    // 面试题 03.02. 栈的最小值
+    // 利用辅助栈，或者新建节点类
+
+    // 面试题 03.04. 化栈为队
+    // 栈的特性是 FILO（先进后出），队列的特性是 FIFO（先进先出）
+    // 用两个栈来模拟队列的特性，一个栈为入队栈，一个栈为出对栈
+
+
 }
 
 public class LeetCode_Mst {
