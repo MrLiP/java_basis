@@ -1,9 +1,6 @@
 package com.Lip;
 
-import java.util.HashSet;
-import java.util.Queue;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 class Solution_Mst {
 
@@ -200,7 +197,7 @@ class Solution_Mst {
         return false;
     }
 
-    // 面试题 02.01. 移除重复节点
+    // 面试题 02.01. 移除重复节点 >> 链表
     // HashSet, 存储所有出现过的节点，ListNode dummy, ListNode pre
     public ListNode removeDuplicateNodes(ListNode head) {
         HashSet<Integer> set = new HashSet<>();
@@ -221,7 +218,7 @@ class Solution_Mst {
         return dummy.next;
     }
 
-    // 面试题 02.02. 返回倒数第 k 个节点
+    // 面试题 02.02. 返回倒数第 k 个节点 >> 链表
     // 快慢指针，slow = k-- <= 0 ? slow.next : slow;
     public int kthToLast(ListNode head, int k) {
         ListNode fast = head;
@@ -235,14 +232,14 @@ class Solution_Mst {
         return head.val;
     }
 
-    // 面试题 02.03. 删除中间节点
+    // 面试题 02.03. 删除中间节点 >> 链表
     // 将自己变为下一节点，再将下一节点剔除
     public void deleteNode(ListNode node) {
         node.val=node.next.val;
         node.next=node.next.next;
     }
 
-    // 面试题 02.04. 分割链表
+    // 面试题 02.04. 分割链表 >> 链表
     // 快慢指针，直接在当前列表上操作
     // 或维护两个链表，small 链表按顺序存储所有小于 xx 的节点，large 链表按顺序存储所有大于等于 x 的节点，最后拼接
     public ListNode partition(ListNode head, int x) {
@@ -270,7 +267,7 @@ class Solution_Mst {
         return dum.next;
     }
 
-    // 面试题 02.05. 链表求和
+    // 面试题 02.05. 链表求和 >> 链表
     // 根据位次依次求和，设置进位符号 flag，分多种情况讨论
     // 优化，while 循环条件 while(l1 != null || l2 != null || x != 0), 然后依据是否为 null 分开讨论，只关注当前位的和
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
@@ -330,7 +327,7 @@ class Solution_Mst {
         return dummy.next;
     }
 
-    // 面试题 02.06. 回文链表
+    // 面试题 02.06. 回文链表 >> 链表
     // 快慢指针找前半部分链表的尾结点
     // 反转后半部分链表
     // 判断是否回文，（恢复链表）
@@ -382,7 +379,7 @@ class Solution_Mst {
         return slow;
     }
 
-    // 面试题 02.07. 链表相交
+    // 面试题 02.07. 链表相交 >> 链表
     // 只要以相同的速度前进，就一定有机会遇见你
     // 无交点时，会一直执行到两个链表的末尾，curA, curB 都为null,也会跳出循环
     public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
@@ -398,7 +395,7 @@ class Solution_Mst {
         return curA;
     }
 
-    // 面试题 02.08. 环路检测
+    // 面试题 02.08. 环路检测 >> 链表
     // HashSet, 快慢指针
     // a=c+(n-1)(b+c)a=c+(n−1)(b+c)
     public ListNode detectCycle(ListNode head) {
@@ -437,22 +434,22 @@ class Solution_Mst {
     // 面试题 03.01. 三合一
     // 三个一位数组，或二维数组
 
-    // 面试题 03.02. 栈的最小值
+    // 面试题 03.02. 栈的最小值 >> 栈
     // 利用辅助栈，或者新建节点类
 
-    // 面试题 03.04. 化栈为队
+    // 面试题 03.04. 化栈为队 >> 栈
     // 栈的特性是 FILO（先进后出），队列的特性是 FIFO（先进先出）
     // 用两个栈来模拟队列的特性，一个栈为入队栈，一个栈为出对栈
 
-    // 面试题 03.05. 栈排序
+    // 面试题 03.05. 栈排序 >> 栈
     // 辅助栈，每次插入一个新元素，把它放到它应该放到的位置
     // List.sort((o1, o2) -> (o2 - o1))
 
-    // 面试题 03.06. 动物收容所
+    // 面试题 03.06. 动物收容所 >> 队列
     // 双队列，用 int 存储年龄
     // 编号就代表年龄，所以不需要额外存储年龄。。。
 
-    // 面试题 04.01. 节点间通路
+    // 面试题 04.01. 节点间通路 >> 图
     // 首先设置访问状态数组 visited，使用DFS「深度优先搜索」进行递归搜索，逐渐压缩搜索区间
     // visited 目的是为了防止出现闭环
     // 采用DFS解决的过程中，应当注意当正序递归搜索时，会出现超时的情况，所以采用逆序搜索的方法
@@ -474,7 +471,24 @@ class Solution_Mst {
         return false;
     }
 
-    //
+    // 面试题 04.02. 最小高度树 >> 二叉树 >> 递归
+    // 使用递归的方式，每次取数组中间的值作为当前节点
+    public TreeNode sortedArrayToBST(int[] num) {
+        if (num.length == 0)
+            return null;
+        return sortedArrayToBST(num, 0, num.length - 1);
+    }
+
+    public TreeNode sortedArrayToBST(int[] num, int start, int end) {
+        if (start > end)
+            return null;
+        int mid = (start + end) >> 1;
+        TreeNode root = new TreeNode(num[mid]);
+        root.left = sortedArrayToBST(num, start, mid - 1);
+        root.right = sortedArrayToBST(num, mid + 1, end);
+        return root;
+    }
+
 }
 
 public class LeetCode_Mst {
