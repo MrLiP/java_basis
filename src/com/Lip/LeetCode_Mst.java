@@ -489,18 +489,39 @@ class Solution_Mst {
         return root;
     }
 
+    public int maxIntValue(int[] arrs) {
+        int length = arrs.length;
+        String[] strs = new String[length];
+
+        for (int i = 0; i < length; i++) {
+            strs[i] = "" + arrs[i];
+        }
+        Arrays.sort(strs, (o1, o2) -> {
+            String o12 = o1 + o2;
+            String o21 = o2 + o1;
+            return o21.compareTo(o12);
+        });
+
+        StringBuilder strb = new StringBuilder();
+        for (String s : strs) {
+            strb.append(s);
+        }
+        return Integer.parseInt(strb.toString());
+        }
+
 }
+
 
 public class LeetCode_Mst {
     public static void main(String[] args) {
 //        int[] arr = {1,2,3};
 //        List list = Arrays.asList(1,2,3);
         Solution_Mst solution = new Solution_Mst();
-        int[] nums1 = new int[]{23,2,6,4,7};
-        int[] nums2 = new int[]{2};
-        ListNode l1 = new ListNode(1);
-        l1.next = new ListNode(2);
-        l1.next.next = new ListNode(1);
-        System.out.println(solution.isPalindrome(l1));
+        int[] nums1 = new int[]{3,2,3,6,4,1,2,3,2,1,2,2};
+        int[] nums2 = new int[]{1,2,2,2,1};
+//        ListNode l1 = new ListNode(1);
+//        l1.next = new ListNode(2);
+//        l1.next.next = new ListNode(1);
+        System.out.print(solution.sortedArrayToBST(nums1, 0, 5));
     }
 }
