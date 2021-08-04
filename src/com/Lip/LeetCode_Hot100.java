@@ -2539,8 +2539,8 @@ public class LeetCode_Hot100 {
 //        int[] arr = {1,2,3};
 //        List list = Arrays.asList(1,2,3);
         Solution solution = new Solution();
-        int[] nums1 = new int[]{23,2,6,4,7};
+        int[] nums1 = new int[]{1,2,3};
         int[] nums2 = new int[]{2};
-        System.out.println(solution.checkSubarraySum(nums1, 13));
+        System.out.println(solution.subsets(nums1));
     }
 }
