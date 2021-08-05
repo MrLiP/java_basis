@@ -551,6 +551,61 @@ class Solution_Mst {
           }
      */
 
+    // 面试题 04.05. 合法二叉搜索树
+    // 中序遍历，遍历过程中判断当前节点的值是否大于前一个中序遍历到的节点
+    public boolean isValidBST(TreeNode root) {
+        Deque<TreeNode> stack = new LinkedList<>();
+        double inorder = -Double.MAX_VALUE;
+
+        while (!stack.isEmpty() || root != null) {
+            while (root != null) {
+                stack.push(root);
+                root = root.left;
+            }
+            root = stack.pop();
+            // 如果中序遍历得到的节点的值小于等于前一个 inorder，说明不是二叉搜索树
+            if (root.val <= inorder) {
+                return false;
+            }
+            inorder = root.val;
+            root = root.right;
+        }
+        return true;
+    }
+
+    // 面试题 04.06. 后继者
+    // 非递归中序遍历，利用一个 flag 记录是否找到了目标 p
+    // 一直往左找，并依次加入栈，直到为空。root=root.left
+    // 出栈，并判断tag是否为true，如果为true，代表已经找到了p的下一个，直接返回；否则继续判断是否为目标p，如果为p,将tag置为true。
+    // 遍历出栈元素的右节点。root=root.right
+    public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+        Deque<TreeNode> stack = new LinkedList<>();
+        boolean flag = false;
+
+        while (!stack.isEmpty() || root != null) {
+            while (root != null) {
+                stack.push(root);
+                root = root.left;
+            }
+            root = stack.pop();
+            if (flag) return root;
+            if (root == p) flag = true;
+            root = root.right;
+        }
+        return null;
+    }
+
+    // 面试题 04.08. 首个共同祖先
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || root == p || root == q) return root;
+
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+        if (left == null) return right;
+        if (right == null) return left;
+        return root;
+    }
+
 
 }
 
