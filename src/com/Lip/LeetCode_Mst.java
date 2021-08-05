@@ -489,25 +489,68 @@ class Solution_Mst {
         return root;
     }
 
-    public int maxIntValue(int[] arrs) {
-        int length = arrs.length;
-        String[] strs = new String[length];
+    // 面试题 04.03. 特定深度节点链表
+    // 二叉树 BFS + 创建链表
+    public ListNode[] listOfDepth(TreeNode tree) {
+        List<ListNode> res = new ArrayList<>();
+        Queue<TreeNode> list = new LinkedList<>();
+        list.add(tree);
 
-        for (int i = 0; i < length; i++) {
-            strs[i] = "" + arrs[i];
-        }
-        Arrays.sort(strs, (o1, o2) -> {
-            String o12 = o1 + o2;
-            String o21 = o2 + o1;
-            return o21.compareTo(o12);
-        });
+        bfs(res, list);
+        return res.toArray(new ListNode[0]);
+    }
 
-        StringBuilder strb = new StringBuilder();
-        for (String s : strs) {
-            strb.append(s);
+    private void bfs(List<ListNode> res, Queue<TreeNode> list) {
+        while (list.size() != 0) {
+            ListNode dummy = new ListNode(-1), cur = dummy;
+            Queue<TreeNode> temp = new LinkedList<>();
+            while (list.size() != 0) {
+                TreeNode node = list.poll();
+                if (node.left != null) temp.offer(node.left);
+                if (node.right != null) temp.offer(node.right);
+                cur.next = new ListNode(node.val);
+                cur = cur.next;
+            }
+            cur.next = null;
+            res.add(dummy.next);
+            list = temp;
         }
-        return Integer.parseInt(strb.toString());
-        }
+    }
+
+    // 面试题 04.04. 检查平衡性
+    // 自顶向下递归，利用求左右子树深度的方式确定该节点是否为平衡节点, O(n²)
+    public boolean isBalanced(TreeNode root) {
+        if (root == null) return true;
+        boolean flag = Math.abs(maxDepth(root.left) - maxDepth(root.right)) <= 1;
+
+        return flag && isBalanced(root.left) && isBalanced(root.right);
+    }
+
+    private int maxDepth(TreeNode root) {
+        if (root == null) return 1;
+        return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
+    }
+
+    // 后序遍历优化思路，自底向上递归，O(n)
+    /*
+          class Solution {
+              boolean flag = true;
+              public boolean isBalanced(TreeNode root) {
+                  dfs(root);
+                  return flag;
+              }
+              public int dfs(TreeNode root){
+                  if(root == null) return 0;
+                  int left = dfs(root.left);
+                  int right = dfs(root.right);
+                  if(Math.abs(left-right) > 1){
+                      flag = false;
+                  }
+                  return Math.max(left,right) + 1;
+              }
+          }
+     */
+
 
 }
 
