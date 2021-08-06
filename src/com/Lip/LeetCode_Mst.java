@@ -596,6 +596,8 @@ class Solution_Mst {
     }
 
     // 面试题 04.08. 首个共同祖先
+    // 递归
+    // if (root == null || root == p || root == q) return root;
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
         if (root == null || root == p || root == q) return root;
 
@@ -606,7 +608,119 @@ class Solution_Mst {
         return root;
     }
 
+    /*
+    面试题 04.09. 二叉搜索树序列
+    每一个节点都必须排在它的子孙结点前面
+    回溯法 + bfs
+     */
+    public List<List<Integer>> BSTSequences(TreeNode root) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> path = new ArrayList<>();
 
+        if (root == null) {
+            ans.add(path);
+            return ans;
+        }
+        List<TreeNode> queue = new ArrayList<>();
+        queue.add(root);
+        bfs(ans, path, queue);
+        return ans;
+    }
+
+    private void bfs(List<List<Integer>> ans, List<Integer> path, List<TreeNode> queue) {
+        if (queue.isEmpty()) {
+            ans.add(new ArrayList<>(path));
+            return;
+        }
+        List<TreeNode> copy = new ArrayList<>(queue);
+        for (int i = 0; i < queue.size(); i++) {
+            TreeNode cur = queue.get(i);
+            path.add(cur.val);
+            queue.remove(i);
+            if (cur.left != null) queue.add(cur.left);
+            if (cur.right != null) queue.add(cur.right);
+            bfs(ans, path, queue);
+            path.remove(path.size() - 1);
+            queue = new ArrayList<>(copy);
+        }
+    }
+
+    /*
+    面试题 04.10. 检查子树
+    递归，从t1树的每个节点开始比对是否能够找到完整的t2树
+    先序序列化可以将一棵树的结构和值信息完全保存，所以可以将t1和t2都进行先序序列化，
+    如果t2的序列化结果是t1序列化结果的子数组，那么就说明t2是t1的一个子树
+     */
+    public boolean checkSubTree(TreeNode t1, TreeNode t2) {
+        if (t2 == null) return true;
+        if (t1 == null) return false;
+        return check(t1, t2) || checkSubTree(t1.left, t2) || checkSubTree(t1.right, t2);
+    }
+
+    private boolean check(TreeNode t1, TreeNode t2) {
+        if (t1 == null && t2 == null) return true;
+        else if (t1 == null || t2 == null) return false;
+        return t1.val == t2.val && check(t1.left, t2.left) && check(t1.right, t2.right);
+    }
+
+    /*
+    面试题 04.12. 求和路径
+    递归 + dfs
+    public int pathSum(TreeNode root, int sum) {
+        if (root == null) {
+            return 0;
+        }
+        return pathSum(root.left, sum) + pathSum(root.right, sum) + helper(root, sum);
+    }
+    private int helper(TreeNode root, int sum) {
+        if (root == null) {
+            return 0;
+        }
+        int ret = sum == root.val ? 1 : 0;
+        sum -= root.val;
+        return helper(root.left, sum) + helper(root.right, sum) + ret;
+    }
+     */
+    public int pathSum(TreeNode root, int sum) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> path = new ArrayList<>();
+
+        dfs(res, path, root, sum);
+        return res.size();
+    }
+
+    private void dfs(List<List<Integer>> res, List<Integer> path, TreeNode root, int sum) {
+        if (root != null) {
+            if (path.size() == 0) {
+                dfs(res, path, root.left, sum);
+                dfs(res, path, root.right, sum);
+            }
+            path.add(root.val);
+            if (sum - root.val == 0) {
+                res.add(new ArrayList<>(path));
+            }
+            dfs(res, path, root.left, sum - root.val);
+            dfs(res, path, root.right, sum - root.val);
+            path.remove(path.size() - 1);
+        }
+    }
+
+    /*
+    面试题 05.01. 插入
+    位运算
+    首先弄左右两个遮罩 left, right，然后用这个遮罩去把要保留的区域保存下来，其他位置零
+    注意，当 j 为 31 时，不能直接左移 32 位，因为这样移动得到的结果全部是 1，只能让它全部位为 0 才行
+     */
+    public int insertBits(int N, int M, int i, int j) {
+        // 先把相应的位置零
+        int allOnes = ~0;
+        int left = j == 31 ? 0 : (allOnes << (j + 1));
+        int right = (1 << i) - 1;
+        int mask = (left | right);
+        N &= mask;
+        M <<= i;
+        return N | M;
+    }
 }
 
 
@@ -620,6 +734,10 @@ public class LeetCode_Mst {
 //        ListNode l1 = new ListNode(1);
 //        l1.next = new ListNode(2);
 //        l1.next.next = new ListNode(1);
-        System.out.print(solution.sortedArrayToBST(nums1, 0, 5));
+        TreeNode root1 = new TreeNode(1);
+        root1.left = new TreeNode(2);
+        root1.right = new TreeNode(2);
+        TreeNode root2 = new TreeNode(2);
+        System.out.print(solution.checkSubTree(root1, root2));
     }
 }
