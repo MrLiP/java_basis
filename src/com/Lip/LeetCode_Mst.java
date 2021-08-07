@@ -721,6 +721,54 @@ class Solution_Mst {
         M <<= i;
         return N | M;
     }
+
+    /*
+    面试题 05.02. 二进制数转字符串
+    小数的二进制是小数部分一直*2取个位数
+    StringBuilder
+     */
+    public String printBin(double num) {
+        StringBuilder sb = new StringBuilder("0.");
+
+        while (sb.length() < 32) {
+            num *= 2;
+            if (num >= 1) {
+                sb.append("1");
+                num -= 1;
+            }
+            else sb.append("0");
+            if (num == 0) return sb.toString();
+        }
+        return "ERROR";
+    }
+
+    /*
+    面试题 05.03. 翻转数位
+    动态规划，
+    cur：当前位置为止连续1的个数，遇到0归零，遇到1加1
+    insert：在当前位置变成1，往前数连续1的最大个数，遇到0变为cur+1，遇到1加1
+    res:保存insert的最大值即可
+
+
+     */
+    public int reverseBits(int num) {
+        int cur = 0, temp = 0, res = 1;
+
+        for (int i = 0; i < 32; i++) {
+            if ((num & 1) == 1) {
+                cur += 1;
+                temp += 1;
+            } else {
+                temp = cur + 1;
+                cur = 0;
+            }
+            res = Math.max(res, temp);
+            num >>= 1;
+        }
+        return res;
+    }
+
+
 }
 
 
@@ -738,6 +786,6 @@ public class LeetCode_Mst {
         root1.left = new TreeNode(2);
         root1.right = new TreeNode(2);
         TreeNode root2 = new TreeNode(2);
-        System.out.print(solution.checkSubTree(root1, root2));
+        System.out.print(solution.printBin(0.625));
     }
 }
