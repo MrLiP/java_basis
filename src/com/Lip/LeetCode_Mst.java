@@ -768,6 +768,41 @@ class Solution_Mst {
         return res;
     }
 
+    /*
+    面试题 05.04. 下一个数
+    暴力法，位运算
+     */
+    public static int[] findClosedNumbers(int num) {
+        int[] res = {-1, -1};
+        long max = (long) num << 1;
+        int min = num >> 1;
+        int oneCount = countOneNum(num);
+        for (int i = num + 1; i <= max; i ++) {
+            if(oneCount == countOneNum(i)) {
+                res[0] = i;
+                break;
+            }
+        }
+        for (int i = num - 1; i >= min; i --) {
+            if(oneCount == countOneNum(i)) {
+                res[1] = i;
+                break;
+            }
+        }
+        return res;
+    }
+
+    public static int countOneNum(long num) {
+        String str = Long.toBinaryString(num);
+        int res = 0;
+        for (int i = 0; i < str.length(); i ++) {
+            if(str.charAt(i) == '1') {
+                res ++;
+            }
+        }
+        return res;
+    }
+
 
 }
 
