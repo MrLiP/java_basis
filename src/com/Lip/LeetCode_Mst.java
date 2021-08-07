@@ -772,7 +772,7 @@ class Solution_Mst {
     面试题 05.04. 下一个数
     暴力法，位运算
      */
-    public static int[] findClosedNumbers(int num) {
+    public int[] findClosedNumbers(int num) {
         int[] res = {-1, -1};
         long max = (long) num << 1;
         int min = num >> 1;
@@ -792,8 +792,8 @@ class Solution_Mst {
         return res;
     }
 
-    public static int countOneNum(long num) {
-        String str = Long.toBinaryString(num);
+    public int countOneNum(int num) {
+        String str = Integer.toBinaryString(num);
         int res = 0;
         for (int i = 0; i < str.length(); i ++) {
             if(str.charAt(i) == '1') {
@@ -801,6 +801,25 @@ class Solution_Mst {
             }
         }
         return res;
+    }
+
+    /*
+    面试题 05.06. 整数转换
+    异或后求 1 的个数
+     */
+    public int convertInteger(int A, int B) {
+        int temp = (A ^ B);
+        return countOneNum(temp);
+    }
+
+    /*
+    面试题 05.07. 配对交换
+    借助掩码 0xaaaaaaaa 和 0x55555555 分别提取偶数位和奇数位。
+    偶数位右移，奇数位左移，最后相加就是结果
+     */
+    public int exchangeBits(int num) {
+        int hex_odd = 0xaaaaaaaa, hex_even = 0x55555555;
+        return (((num & hex_odd) >> 1) + ((num & hex_even) << 1));
     }
 
 
