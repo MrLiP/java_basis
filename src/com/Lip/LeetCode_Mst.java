@@ -1,5 +1,6 @@
 package com.Lip;
 
+import javax.lang.model.element.NestingKind;
 import java.util.*;
 
 class Solution_Mst {
@@ -822,7 +823,176 @@ class Solution_Mst {
         return (((num & hex_odd) >> 1) + ((num & hex_even) << 1));
     }
 
+    /*
+    面试题 05.08. 绘制直线
+     */
+    public int[] drawLine(int length, int w, int x1, int x2, int y) {
+        int [] screen = new int[length]; int pos = w / 32 * y;
+        for(int i = x1; i <= x2; i++) {
+            screen[pos + (i / 32)] |= (1 << (31 - (i % 32)));
+        }
+        return screen;
+    }
 
+    /*
+    面试题 08.01. 三步问题
+    动态规划
+     */
+    public int waysToStep(int n) {
+        if (n == 1 || n == 2) return n;
+        long m = 1000000007;
+        long[] dp = new long[n + 1];
+        dp[1] = 1;
+        dp[2] = 2;
+        dp[3] = 4;
+
+        for (int i = 4; i <= n; i++) {
+            dp[i] = dp[i-1] + dp[i-2] + dp[i-3];
+            dp[i] %= m;
+        }
+
+        return (int) dp[n];
+    }
+
+    /*
+    面试题 08.02. 迷路的机器人
+    dfs, list.add(Arrays.asList(x,y));
+     */
+    public List<List<Integer>> pathWithObstacles(int[][] obstacleGrid) {
+        LinkedList<List<Integer>> list = new LinkedList<>();
+        dfs(obstacleGrid, list, 0, 0);
+        return list;
+    }
+
+    private boolean dfs(int[][] obstacleGrid,LinkedList<List<Integer>> list, int x, int y){
+        if (x < 0 || x >= obstacleGrid.length ||
+                y < 0 || y >= obstacleGrid[0].length ||
+                obstacleGrid[x][y] != 0){
+            return false;
+        }
+        obstacleGrid[x][y] = 1;                //设置为访问过
+        list.add(Arrays.asList(x,y));          //添加这个点
+        if(x == obstacleGrid.length - 1 && y == obstacleGrid[0].length - 1){
+            return true;           //到终点了
+        }
+        if(dfs(obstacleGrid, list, x+1, y)){   //是否这条路径可以到终点
+            return true;
+        }
+        if(dfs(obstacleGrid, list, x, y+1)){   //是否这条路径可以到终点
+            return true;
+        }
+        list.removeLast();                    //从这个点出发无法到达终点，移除这个点
+        return false;
+    }
+
+    /*
+    面试题 08.03. 魔术索引
+    间隔跳跃查找
+     */
+    public int findMagicIndex(int[] nums) {
+        for (int i = 0; i < nums.length;) {
+            if (i == nums[i]) return i;
+            i = Math.max(nums[i], i + 1);
+        }
+        return -1;
+    }
+
+    /*
+    面试题 08.04. 幂集
+    回溯，https://leetcode-cn.com/problems/power-set-lcci/solution/hui-su-wei-yun-suan-deng-gong-4chong-fang-shi-jie-/
+     */
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
+
+        dfs(res, temp, nums, 0);
+
+        return res;
+    }
+
+    private void dfs(List<List<Integer>> res, List<Integer> temp, int[] nums, int index) {
+        if (index == nums.length) {
+            res.add(new ArrayList<>(temp));
+        } else {
+            temp.add(nums[index]);
+            dfs(res, temp, nums, index + 1);
+            temp.remove(temp.size() - 1);
+            dfs(res, temp, nums, index + 1);
+        }
+    }
+
+    /*
+    面试题 08.05. 递归乘法
+    位运算
+    if ((A & 1) == 1) { // 当B为奇数时，B移位操作导致丢失，需要补偿A
+        return multiply(A >> 1, B << 1) + B;
+    }
+     */
+    public int multiply(int A, int B) {
+        if (A > B) {
+            int temp = A;
+            A = B; B = temp;
+        }
+        if (A == 0) return 0;
+        if (A == 1) return B;
+//        return (B << 1) + multiply(A - 2, B);
+        if ((A & 1) == 1) { // 当B为奇数时，B移位操作导致丢失，需要补偿A
+            return multiply(A >> 1, B << 1) + B;
+        }
+
+        return multiply(A >> 1, B << 1);
+    }
+
+    /*
+    面试题 08.06. 汉诺塔问题
+    递归
+     */
+    public void hanota(List<Integer> A, List<Integer> B, List<Integer> C) {
+        move(A.size(), A, B, C);
+    }
+
+    void move(int n, List<Integer> A, List<Integer> B, List<Integer> C) {
+        if (n == 1) {
+            C.add(A.remove(A.size() - 1));
+        } else {
+            B.add(A.remove(A.size() - 1));
+            move(n - 1, A, B, C); // 一处递归即可
+            C.add(B.remove(B.size() - 1));
+        }
+    }
+
+    /*
+    面试题 08.07. 无重复字符串的排列组合
+    回溯，全排列
+     */
+    public String[] permutation(String S) {
+        List<String> list = new LinkedList<>();
+        StringBuilder sb = new StringBuilder();
+        boolean[] visited = new boolean[S.length()];
+
+        dfs(list, sb, visited, S);
+        return list.toArray(new String[0]);
+    }
+
+    private void dfs(List<String> list, StringBuilder sb, boolean[] visited, String s) {
+        if (sb.length() == s.length()) {
+            list.add(sb.toString());
+        } else {
+            for (int i = 0; i < s.length(); i++) {
+                if (!visited[i]) {
+                    visited[i] = true;
+                    sb.append(s.charAt(i));
+                    dfs(list, sb, visited, s);
+                    sb.deleteCharAt(sb.length() - 1);
+                    visited[i] = false;
+                }
+            }
+        }
+    }
+
+    /*
+    面试题 08.08. 有重复字符串的排列组合
+     */
 }
 
 
