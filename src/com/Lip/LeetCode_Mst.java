@@ -1,5 +1,7 @@
 package com.Lip;
 
+import com.sun.xml.internal.bind.v2.TODO;
+
 import javax.lang.model.element.NestingKind;
 import java.util.*;
 
@@ -992,7 +994,23 @@ class Solution_Mst {
 
     /*
     面试题 08.08. 有重复字符串的排列组合
+    HashSet，或者排序剪枝去重
      */
+    /*
+        char[] chars = S.toCharArray();
+        Arrays.sort(chars);
+
+        dfs
+            if (visited[i]) continue;
+            if (i > 0 && !visited[i - 1] && chars[i - 1] == chars[i]) continue;
+     */
+
+    /*
+    面试题 08.09. 括号
+     */
+//    public List<String> generateParenthesis(int n) {
+//
+//    }
 }
 
 
