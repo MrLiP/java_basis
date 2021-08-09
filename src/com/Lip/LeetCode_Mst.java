@@ -1007,10 +1007,136 @@ class Solution_Mst {
 
     /*
     面试题 08.09. 括号
+    dfs, 深度优先遍历
      */
-//    public List<String> generateParenthesis(int n) {
-//
-//    }
+    public List<String> generateParenthesis(int n) {
+        List<String> res = new LinkedList<>();
+
+        dfs(res, "", n, 0, 0);
+        return res;
+    }
+
+    private void dfs(List<String> res, String s, int n, int left, int right) {
+        if (right == n) res.add(s);
+        else {
+            if (left < n) dfs(res, s + "(", n, left + 1, right);
+            if (right < left) dfs(res, s + ")", n, left, right + 1);
+        }
+    }
+
+    /*
+    面试题 08.10. 颜色填充
+    染色本身可以看做一种标记
+    直接 dfs
+     */
+    public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
+        if (newColor == image[sr][sc]) return image;
+
+        boolean[][] visited = new boolean[image.length][image[0].length];
+        pointFill(image, sr, sc, newColor, visited, image[sr][sc]);
+
+        return image;
+    }
+
+    private void pointFill(int[][] image, int r, int c, int target, boolean[][] visited, int ori) {
+        if (r >= image.length || r < 0 || c >= image[0].length || c < 0 || visited[r][c] || image[r][c] != ori) {
+            return;
+        }
+        visited[r][c] = true;
+        image[r][c] = target;
+        pointFill(image, r + 1, c, target, visited, ori);
+        pointFill(image, r - 1, c, target, visited, ori);
+        pointFill(image, r, c + 1, target, visited, ori);
+        pointFill(image, r, c - 1, target, visited, ori);
+    }
+
+    /*
+    面试题 08.11. 硬币
+    动态规划，先遍历硬币，保证在考虑一枚硬币的情况时，没有较大的硬币影响
+    最终每种组合情况，都是以硬币的面额大小非递减组合。避免了原先调换顺序后重复计算的情况。
+     */
+    public int waysToChange(int n) {
+        long[] dp = new long[n + 1];
+        dp[0] = 1;
+        int[] coins = new int[]{1,5,10,25};
+
+        for(int coin : coins) {
+            for(int i = coin; i <= n; i++) {
+                dp[i] = (dp[i] + dp[i - coin]) % 1000000007;
+            }
+        }
+
+        return (int)dp[n];
+    }
+
+    /*
+    面试题 08.12. 八皇后
+    需要保证皇后不能在同一行， 同一列， 同一条对角线上
+    按行搜索，根据不能在同一列和不能在同一对角线的情况下剪枝
+     */
+    public List<List<String>> solveNQueens(int n) {
+        boolean []visit = new boolean[n]; int []list = new int[n];
+        List<List<String>> retList= new ArrayList<List<String>>();
+        visitMap(visit, n, 0, list, retList);
+        return retList;
+    }
+
+    private void visitMap(boolean [] visit, int n, int col, int []list, List<List<String>> retList){
+        if(col == n){
+            List<String> rl = new ArrayList<String>();
+            for(int i = 0; i < n; i++){
+                StringBuilder s = new StringBuilder();
+                for(int j = 0; j < n; j++) s.append(list[i] == j ? "Q" : ".");
+                rl.add(s.toString());
+            }
+            retList.add(rl);
+            return;
+        }
+        for(int i = 0; i < n; i++){
+            if(visit[i]) continue;
+            if(!verify(list, col, i)) continue;
+            visit[i] = true;list[col] = i;
+            visitMap(visit, n, col+1, list, retList);
+            visit[i] = false;list[col] = 0;
+        }
+    }
+
+    private boolean verify(int []list, int n, int x){
+        for(int i=0;i<n;i++) if(Math.abs(i-n)==Math.abs(list[i]-x)) return false;
+        return true;
+    }
+
+    /*
+    面试题 08.13. 堆箱子
+    回溯会超时，采用排序后 dp
+    对于dp[i]意思是第i个箱子能达到的最大高度
+     */
+    public int pileBox(int[][] box) {
+        Arrays.sort(box, (a, b) -> {
+            if (a[0] != b[0]) {
+                return a[0] - b[0];
+            } else {
+                return b[1] - a[1];
+            }
+        });
+        int m = box.length;
+        int max = 0;
+        int[] dp = new int[m + 1];
+        for (int i = 1; i < m + 1; i++) {
+            dp[i] = box[i - 1][2];
+            for (int j = 1; j < m + 1; j++) {
+                if (box[j - 1][1] < box[i - 1][1] && box[j - 1][2] < box[i - 1][2]) {
+                    dp[i] = Math.max(dp[i], dp[j] + box[i - 1][2]);
+                }
+            }
+            max = Math.max(max, dp[i]);
+        }
+        return max;
+    }
+
+    /*
+    面试题 08.14. 布尔运算
+     */
 }
 
 
