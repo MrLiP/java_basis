@@ -1309,6 +1309,63 @@ class Solution_Mst {
 
     /*
     面试题 10.09. 排序矩阵查找
+    二分查找
+     */
+    public boolean searchMatrix(int[][] matrix, int target) {
+        int m = matrix.length, n = matrix[0].length, r = m - 1, c = 0;
+
+        while (r >= 0 && c < n) {
+            if (matrix[r][c] == target) return true;
+            else if (matrix[r][c] < target) r--;
+            else c++;
+        }
+        return false;
+    }
+
+    /*
+    面试题 10.10. 数字流的秩
+    二分查找，class StreamRank
+     */
+
+    /*
+    面试题 10.11. 峰与谷
+    一次遍历 + 奇偶判断 + 峰谷判断不满足则交换
+     */
+    public void wiggleSort(int[] nums) {
+        if (nums.length != 0) {
+            for (int i = 0; i < nums.length; i++) {
+                if (i % 2 == 0 && i < nums.length - 1 && nums[i] < nums[i + 1]) {
+                    int temp = nums[i];
+                    nums[i] = nums[i + 1];
+                    nums[i + 1] = temp;
+                }
+                if (i % 2 == 1 && i < nums.length - 1 && nums[i] > nums[i + 1]) {
+                    int temp = nums[i];
+                    nums[i] = nums[i + 1];
+                    nums[i + 1] = temp;
+                }
+            }
+        }
+    }
+
+    /*
+    面试题 16.01. 交换数字
+    加减或者异或，加减需要考虑溢出问题，所以异或更好
+     */
+    public int[] swapNumbers(int[] numbers) {
+        numbers[0] = numbers[0] ^ numbers[1];
+        numbers[1] = numbers[0] ^ numbers[1];
+        numbers[0] = numbers[0] ^ numbers[1];
+        return numbers;
+    }
+
+    /*
+    面试题 16.02. 单词频率
+    Hashmap，getOrDefault
+     */
+
+    /*
+    面试题 16.03. 交点
      */
 
 }
