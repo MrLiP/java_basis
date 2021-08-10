@@ -1136,7 +1136,124 @@ class Solution_Mst {
 
     /*
     面试题 08.14. 布尔运算
+    区间dp
      */
+    public int countEval(String s, int result) {
+        //特例
+        if (s.length() == 0) {
+            return 0;
+        }
+        if (s.length() == 1) {
+            return (s.charAt(0) - '0') == result ? 1 : 0;
+        }
+        char[] ch = s.toCharArray();
+        //定义状态
+        int[][][] dp = new int[ch.length][ch.length][2];
+        //base case
+        for (int i = 0; i < ch.length; i++) {
+            if (ch[i] == '0' || ch[i] == '1') {
+                dp[i][i][ch[i] - '0'] = 1;
+            }
+        }
+        //套区间dp模板
+        //枚举区间长度len，跳步为2，一个数字一个符号
+        for (int len = 2; len <= ch.length; len += 2) {
+            //枚举区间起点，数字位，跳步为2
+            for (int i = 0; i <= ch.length - len; i += 2) {
+                //区间终点，数字位
+                int j = i + len;
+                //枚举分割点，三种 '&','|', '^'，跳步为2
+                for (int k = i + 1; k <= j - 1; k += 2) {
+                    if (ch[k] == '&') {
+                        //结果为0 有三种情况： 0 0, 0 1, 1 0
+                        //结果为1 有一种情况： 1 1
+                        dp[i][j][0] += dp[i][k - 1][0] * dp[k + 1][j][0] + dp[i][k - 1][0] * dp[k + 1][j][1] + dp[i][k - 1][1] * dp[k + 1][j][0];
+                        dp[i][j][1] += dp[i][k - 1][1] * dp[k + 1][j][1];
+                    }
+                    if (ch[k] == '|') {
+                        //结果为0 有一种情况： 0 0
+                        //结果为1 有三种情况： 0 1, 1 0, 1 1
+                        dp[i][j][0] += dp[i][k - 1][0] * dp[k + 1][j][0];
+                        dp[i][j][1] += dp[i][k - 1][0] * dp[k + 1][j][1] + dp[i][k - 1][1] * dp[k + 1][j][0] + dp[i][k - 1][1] * dp[k + 1][j][1];
+                    }
+                    if (ch[k] == '^') {
+                        //结果为0 有两种情况： 0 0, 1 1
+                        //结果为1 有两种情况： 0 1, 1 0
+                        dp[i][j][0] += dp[i][k - 1][0] * dp[k + 1][j][0] + dp[i][k - 1][1] * dp[k + 1][j][1];
+                        dp[i][j][1] += dp[i][k - 1][1] * dp[k + 1][j][0] + dp[i][k - 1][0] * dp[k + 1][j][1];
+                    }
+                }
+            }
+        }
+        return dp[0][ch.length - 1][result];
+    }
+
+    /*
+    面试题 10.01. 合并排序的数组
+    双指针，逆序遍历
+     */
+    public void merge(int[] A, int m, int[] B, int n) {
+        int length = m + n - 1, fir = m - 1, snd = n - 1;
+
+        for (int i = length; i >= 0; i--) {
+            if (fir < 0) {
+                A[i] = B[snd];
+                snd--;
+                continue;
+            }
+            if (snd < 0) {
+                break;
+            }
+            if (A[fir] > B[snd]) {
+                A[i] = A[fir];
+                fir--;
+            } else {
+                A[i] = B[snd];
+                snd--;
+            }
+        }
+    }
+
+    /*
+    面试题 10.02. 变位词组
+    对字符串进行排序，并作为 hashMap 的键
+    优化思路，利用一个大小为 26 的数组进行计数，然后对计数后的数组统计值进行拼接，作为哈希表的 key，从而实现线性复杂度
+     */
+    public List<List<String>> groupAnagrams(String[] strs) {
+
+        HashMap<String, List<String>> map = new HashMap<>();
+
+        for (String str : strs) {
+            char[] chs = str.toCharArray();
+            Arrays.sort(chs);
+            if (map.containsKey(Arrays.toString(chs))) {
+                map.get(Arrays.toString(chs)).add(str);
+            } else {
+                map.put(Arrays.toString(chs), new ArrayList<String>(){{add(str);}});
+            }
+        }
+
+        return new ArrayList<List<String>>(map.values());
+    }
+
+    public List<List<String>> groupAnagrams_opt(String[] ss) {
+        List<List<String>> ans = new ArrayList<>();
+        Map<String, List<String>> map = new HashMap<>();
+        for (String s : ss) {
+            int[] cnts = new int[26];
+            for (char c : s.toCharArray()) cnts[c - 'a']++;
+            StringBuilder sb = new StringBuilder();
+            for (int i : cnts) sb.append(i + "_");
+            String key = sb.toString();
+            List<String> list = map.getOrDefault(key, new ArrayList<>());
+            list.add(s);
+            map.put(key, list);
+        }
+        for (String key : map.keySet()) ans.add(map.get(key));
+        return ans;
+    }
+
+
 }
 
 
@@ -1154,6 +1271,6 @@ public class LeetCode_Mst {
         root1.left = new TreeNode(2);
         root1.right = new TreeNode(2);
         TreeNode root2 = new TreeNode(2);
-        System.out.print(solution.printBin(0.625));
+        System.out.print(solution.groupAnagrams(new String[]{"eat","tea","tan","ate","nat","bat"}));
     }
 }
