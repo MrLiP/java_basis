@@ -1253,6 +1253,63 @@ class Solution_Mst {
         return ans;
     }
 
+    /*
+    面试题 10.03. 搜索旋转数组
+    若有多个相同元素，返回索引值最小的一个，即，if(arr[l] == arr[mid]) l++;
+    然后根据 mid 的左右端哪段有序进行分类，注意相等的处理，if(arr[l] == arr[mid]) l++;
+     */
+    public int search(int[] arr, int target) {
+        int n = arr.length;
+        int result = -1;
+        int l = 0, r = n - 1;
+        while(l <= r){
+            int mid = (l + r + 1) >> 1;
+            if(arr[l] == target) return l;
+            else if(arr[l] == arr[mid]) l++;
+            else if(arr[l] < arr[mid]){
+                if(arr[l] > target || arr[mid] < target) l = mid;
+                else{
+                    l = l + 1;
+                    r = mid;
+                }
+            }else{
+                if(arr[l] > target && arr[mid] < target) l = mid;
+                else{
+                    l = l + 1;
+                    r = mid;
+                }
+            }
+        }
+        return result;
+    }
+
+    /*
+    面试题 10.05. 稀疏数组搜索
+    当前位置为""，且 mid > left，mid前移
+    注意给左移操作符加括号，否则优先级会导致出错
+     */
+    public int findString(String[] words, String s) {
+        int left = 0, right = words.length - 1;
+
+        while (left <= right) {
+            int mid = left + ((right - left) >> 1);
+
+            while (mid > left && words[mid].equals("")) {
+                mid--;
+            }
+            if (words[mid].equals(s)) return mid;
+            else if (words[mid].compareTo(s) < 0) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return -1;
+    }
+
+    /*
+    面试题 10.09. 排序矩阵查找
+     */
 
 }
 
@@ -1262,7 +1319,7 @@ public class LeetCode_Mst {
 //        int[] arr = {1,2,3};
 //        List list = Arrays.asList(1,2,3);
         Solution_Mst solution = new Solution_Mst();
-        int[] nums1 = new int[]{3,2,3,6,4,1,2,3,2,1,2,2};
+        int[] nums1 = new int[]{15,16,19,20,25,1,3,4,5,7,10,14};
         int[] nums2 = new int[]{1,2,2,2,1};
 //        ListNode l1 = new ListNode(1);
 //        l1.next = new ListNode(2);
@@ -1271,6 +1328,6 @@ public class LeetCode_Mst {
         root1.left = new TreeNode(2);
         root1.right = new TreeNode(2);
         TreeNode root2 = new TreeNode(2);
-        System.out.print(solution.groupAnagrams(new String[]{"eat","tea","tan","ate","nat","bat"}));
+        System.out.print(solution.search(nums1, 5));
     }
 }
