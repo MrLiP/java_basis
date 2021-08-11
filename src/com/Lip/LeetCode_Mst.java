@@ -1442,6 +1442,80 @@ class Solution_Mst {
         }
         return (int) ans;
     }
+
+    /*
+    面试题 16.07. 最大数值
+    首先 a - b 得到差值x, 由于是long型，右移63位得到符号位，注意负号不变，那么正数右移63位就是0，负数右移63位就是-1
+    那么得出我们的计算公式 (1 + k) * a - b * k
+     */
+    public int maximum(int a, int b) {
+        long x = (long) a - (long) b;
+        int k = (int) (x >> 63);
+
+        return (1 + k) * a - b * k;
+    }
+
+    /*
+    面试题 16.08. 整数的英语表示
+    递归调用
+     */
+    private final int[] NUMBER = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 30, 40, 50, 60, 70, 80, 90, 100, 1000, 1000000, 1000000000};
+    private final String[] WORDS = {"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety", "Hundred", "Thousand", "Million", "Billion"};
+
+    public String numberToWords(int num) {
+        // 后面可能对 NUMBER[i] 求余
+        if (num == 0) return "Zero";
+        // 从 NEMBERS 的最大索引处开始
+        int i = 30;
+        // 找到num最大的数位
+        while (i >= 0 && NUMBER[i] > num) --i;
+        StringBuilder res = new StringBuilder();
+        // 90以前的 NUMBER 转WORDS不需要前缀
+        if (NUMBER[i] <= 90)
+            res.append(WORDS[i]);
+        else
+            // e.g. 100 = "One" + " " + "Hundred", 90以后的NUMBER转WORDS需要一个前缀
+            res.append(numberToWords(num / NUMBER[i])).append(" ").append(WORDS[i]);
+        // 下一位
+        if (num % NUMBER[i] > 0)
+            res.append(" ").append(numberToWords(num % NUMBER[i]));
+        return res.toString();
+    }
+
+    /*
+    面试题 16.09. 运算
+    快速幂，提前准备好二进制的正值和负值
+     */
+
+    /*
+    面试题 16.10. 生存人数
+    利用数组记录出生时刻, 死亡时刻
+    再根据前缀和, 求最大值, 并标记年份
+     */
+    public int maxAliveYear(int[] birth, int[] death) {
+        // 先统计每年的人口数变化
+        int[] change = new int[102];
+        for (int i = 0; i < birth.length; i++) {
+            // eg:1900年出生的人导致1900年变化人数加1，存储在change[0]
+            change[birth[i] - 1900]++;
+            // eg:1900年死亡的人导致1901年变化人数减1，存储在change[1]
+            change[death[i] - 1899]--;
+        }
+        int maxAlive = 0;
+        int curAlive = 0;
+        int theYear = 1900;
+        // 再根据每年变化人数求一个最大值
+        for (int i = 0; i < 101; i++) {
+            curAlive += change[i];
+            if (curAlive > maxAlive) {
+                maxAlive = curAlive;
+                theYear = 1900 + i;
+            }
+        }
+        return theYear;
+    }
+
+
 }
 
 
