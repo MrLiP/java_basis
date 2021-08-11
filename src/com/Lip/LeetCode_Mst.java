@@ -3,6 +3,7 @@ package com.Lip;
 import com.sun.xml.internal.bind.v2.TODO;
 
 import javax.lang.model.element.NestingKind;
+import java.lang.reflect.Array;
 import java.util.*;
 
 class Solution_Mst {
@@ -1366,8 +1367,81 @@ class Solution_Mst {
 
     /*
     面试题 16.03. 交点
+    纯算法题，参数方程
      */
 
+    /*
+    面试题 16.04. 井字游戏
+    分别检查横和，纵和以及对角线和
+     */
+    public String tictactoe(String[] board) {
+        int length = board.length;
+        int heng = 0; //横的和
+        int zong = 0; //纵的和
+        int left = 0; //左斜线
+        int right = 0; //右斜线
+        boolean flag = false; //记录有没有空格
+
+        for (int i = 0; i < length; i++) {
+            heng = 0; zong = 0;
+            for (int j = 0; j < length; j++) {
+                heng = heng +  (int) board[i].charAt(j);
+                zong = zong + (int) board[j].charAt(i);
+
+                if(board[i].charAt(j) == ' ') flag = true;
+
+            }
+            //横纵检查
+            if (heng == (int)'X' * length || zong == (int)'X' * length) return "X";
+            if (heng == (int)'O' * length || zong == (int)'O' * length) return "O";
+            //两条斜线上的相加
+            left = left + (int)board[i].charAt(i);
+            right = right + (int)board[i].charAt(length - i - 1);
+        }
+        //两条斜线检查
+        if (left == (int)'X' * length || right == (int)'X' * length) return "X";
+        if (left == (int)'O' * length || right == (int)'O' * length) return "O";
+        if (flag) return "Pending";
+        return "Draw";
+    }
+
+    /*
+    面试题 16.05. 阶乘尾数
+    统计有多少个 0, 实际上是统计 2 和 5 一起出现多少对, 不过因为 2 出现的次数一定大于 5 出现的次数
+    因此我们只需要检查 5 出现的次数就好了
+     */
+    public int trailingZeroes(int n) {
+        int count = 0;
+        while(n >= 5){
+            n /= 5;
+            count += n;
+        }
+        return count;
+    }
+
+    /*
+    面试题 16.06. 最小差
+    排序 + 双指针，注意 int 溢出，利用 (long) 进行强制类型转换
+     */
+    public int smallestDifference(int[] a, int[] b) {
+        Arrays.sort(a);
+        Arrays.sort(b);
+        long ans = Integer.MAX_VALUE;
+        int l = 0, r = 0;
+
+        while (l < a.length || r < b.length) {
+            if (l == a.length) {
+                ans = Math.min(ans, Math.abs((long)a[l - 1] - (long)b[r++]));
+            } else if (r == b.length) {
+                ans = Math.min(ans, Math.abs((long)a[l++] - (long)b[r - 1]));
+            } else {
+                ans = Math.min(ans, Math.abs((long)a[l] - (long)b[r]));
+                if (a[l] > b[r]) r++;
+                else l++;
+            }
+        }
+        return (int) ans;
+    }
 }
 
 
