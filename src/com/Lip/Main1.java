@@ -19,23 +19,83 @@ public class Main1 {
 //            }
 //        }
 
-        Scanner sc = new Scanner(System.in);
-        String[] str = sc.nextLine().split(",");
-        String[] lk = str[str.length - 1].split(":");
-        int[] arr = new int[str.length];
-        for (int i = 0; i < arr.length - 1; i++) {
-            arr[i] = Integer.parseInt(str[i]);
-        }
-        arr[arr.length - 1] = Integer.parseInt(lk[0]);
-        int k = Integer.parseInt(lk[1]);
+//        Scanner sc = new Scanner(System.in);
+//        String[] str = sc.nextLine().split(",");
+//        String[] lk = str[str.length - 1].split(":");
+//        int[] arr = new int[str.length];
+//        for (int i = 0; i < arr.length - 1; i++) {
+//            arr[i] = Integer.parseInt(str[i]);
+//        }
+//        arr[arr.length - 1] = Integer.parseInt(lk[0]);
+//        int k = Integer.parseInt(lk[1]);
+//
+////        System.out.println(solution(arr, k));
+//        DecimalFormat df = new DecimalFormat("0.00%");
+//        String r = df.format(solution(arr, k));
+//        System.out.println(r);
 
-//        System.out.println(solution(arr, k));
-        DecimalFormat df = new DecimalFormat("0.00%");
-        String r = df.format(solution(arr, k));
-        System.out.println(r);
+//        ListNode head = new ListNode(2);
+//        head.next = new ListNode(1);
+//        head.next.next = new ListNode(2);
+//        head.next.next.next = new ListNode(1);
+////        head.next.next.next.next = new ListNode(5);
+//
+//        ListNode cur = formatList(head);
+        System.out.println(minimum(new int[]{1,2,3,4,5}));
 
     }
 
+    public static long minimum (int[] a) {
+        long ans = Long.MAX_VALUE, sum = 0;
+        long[] fAdd = new long[a.length + 1];
+
+        for (int i = 0; i < a.length; i++) {
+            sum += a[i];
+            fAdd[i+1] += (fAdd[i] + a[i]);
+        }
+
+        int l = 0, r = 1, temp = a[0];
+        while (r < a.length) {
+            long cur = sum - 2 * temp;
+            if (cur < 0) {
+                temp -= a[l];
+                l++;
+            } else if (cur > 0) {
+                temp += a[r];
+                r++;
+            } else return 0;
+            ans = Math.min(ans, Math.abs(cur));
+        }
+
+        return ans;
+
+    }
+
+    public static ListNode formatList(ListNode head) {
+        if (head == null || head.next == null || head.next.next == null) return head;
+
+        ListNode dummy = new ListNode(-1), left = head, right = head;
+        dummy.next = head;
+
+        int index = 0;
+        while (head != null && head.next != null) {
+            if (index != 0) {
+                ListNode cur = head.next;
+                dummy.next = new ListNode(cur.val);
+                dummy.next.next = left;
+                left = dummy.next;
+                head = cur;
+                index = 0;
+            } else {
+                head = head.next;
+                right.next = head;
+                right = right.next;
+                index = 1;
+            }
+        }
+
+        return dummy.next;
+    }
 //    private static int[] solution(int[] rains) {
 //        int[] ans = new int[rains.length];
 //        Map<Integer, Integer> full = new HashMap<>();
