@@ -9,10 +9,9 @@ public class LRUCache {
      * DLinkedNode: 双向链表
      */
     static class DLinkedNode {
-        int key;
-        int value;
-        DLinkedNode prev;
-        DLinkedNode next;
+        int key, value;
+        DLinkedNode prev, next;
+
         public DLinkedNode() {}
         public DLinkedNode(int _key, int _value) {key = _key; value = _value;}
     }

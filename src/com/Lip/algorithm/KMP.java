@@ -13,7 +13,7 @@ package com.Lip.algorithm;
  */
 public class KMP {
     public static void main(String[] args) {
-
+        System.out.println(kmp("absabcabc", "sabc"));
     }
 
     public static int kmp(String ts, String ps) {
@@ -59,5 +59,4 @@ public class KMP {
 
         return next;
     }
-
 }
