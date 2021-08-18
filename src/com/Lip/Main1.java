@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Main1 {
+    // 两个数组，从小到大
     public static void main(String[] args) {
 //        Scanner sc = new Scanner(System.in);
 //        String[] str = sc.nextLine().split(",");
