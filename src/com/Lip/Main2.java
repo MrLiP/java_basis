@@ -1,5 +1,6 @@
 package com.Lip;
 
+import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +9,7 @@ import java.util.Scanner;
 public class Main2 {
 
     public static void main(String[] args) {
+        long l = 499;
 
 
     }
