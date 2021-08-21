@@ -33,7 +33,7 @@ public class Main2 {
         nums[row][col] = 1;
         zeros--;
 
-        if (zeros == 0) {
+        if (row == n - 1 && zeros == 0) {
             ans++;
             return;
         }
