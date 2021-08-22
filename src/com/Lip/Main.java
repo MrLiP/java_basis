@@ -1,5 +1,7 @@
 package com.Lip;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -7,44 +9,99 @@ import java.util.Stack;
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        String str = sc.nextLine();
-        System.out.println(solution_1(str));
 
-//        System.out.print(solution("[][[]2]2"));
+        int n = sc.nextInt();
+        String str = sc.next();
+
+        ArrayList<Integer[]> result = solution_3(str, n);
+
+        System.out.println("Test case");
+        for (int i = 0; i < result.size() - 1; i++) {
+            Integer[] arr = result.get(i);
+            System.out.println(arr[0] + " " + arr[1]);
+        }
+        System.out.print(result.get(result.size() - 1)[0] + " " + result.get(result.size() - 1)[1]);
     }
 
-    // 数箱子，[][[][][]2]3 >> 16
-    private static int solution_1(String str) {
-        int ans = 0;
-//        Stack<Character> chs = new Stack<Character>();
-        Stack<Integer> stack = new Stack<>();
-        stack.add(0);
+    private static ArrayList<Integer[]> solution_3(String str, int n) {
+        ArrayList<Integer[]> list = new ArrayList<>();
 
-        char[] charr = str.toCharArray();
-
-        for (int i = 0; i < charr.length; i++) {
-            char ch = str.charAt(i);
-
-            if (ch == '[') {
-//                chs.push(ch);
-                stack.push(1);
-            } else if (ch == ']') {
-                if (i < charr.length - 1 && str.charAt(i + 1) > '0' && str.charAt(i + 1) <= '9') {
-                    int a = stack.pop();
-                    int multi = str.charAt(i + 1) - '0';
-                    stack.push(a * multi);
-                    i++;
-                }
-                int fst = stack.pop();
-                int snd = stack.pop();
-                stack.push(fst + snd);
+        for (int i = 1; i <= n; i++) {
+            String s = str.substring(0, i);
+            int temp = check(s);
+            if (temp != 0) {
+                list.add(new Integer[]{i, i / temp});
             }
         }
-        int num = stack.size();
-        for (int i = 0; i < num; i++) {
-            ans += stack.pop();
+
+        return list;
+    }
+
+    private static int check(String s) {
+        int n = s.length();
+
+        for (int i = 1; i * 2 <= n; i++) {
+            if (n % i == 0) {
+                boolean match = true;
+                for (int j = i; j < n; j++) {
+                    if (s.charAt(j) != s.charAt(j - i)) {
+                        match = false;
+                        break;
+                    }
+                }
+                if (match) return i;
+            }
+        }
+        return 0;
+    }
+
+//    private static int check(String s) {
+//        if (s == null || s.length() < 1) return 0;
+//        int len = s.length();
+//        String str = s;
+//        while (len > 1) {
+//            str = str.charAt(s.length() - 1) + str.substring(0, s.length() - 1);
+//            if (str.equals(s)) return len;
+//            len--;
+//        }
+//        return 0;
+//    }
+
+    // "azbA5#1@c"
+    public static long convertMagicalString (String magicalString) {
+        StringBuilder word = new StringBuilder();
+        StringBuilder num = new StringBuilder();
+
+        for (char ch : magicalString.toCharArray()) {
+            if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9')) {
+                if ((ch >= '0' && ch <= '9')) num.append(ch);
+                else {
+                    if (ch >= 'A' && ch <= 'Z') word.append((char)(ch + 32));
+                    else word.append(ch);
+                }
+            }
+        }
+        char[] nums = num.toString().toCharArray();
+        char[] words = word.toString().toCharArray();
+        Arrays.sort(nums);
+        Arrays.sort(words);
+
+        StringBuilder ans = new StringBuilder();
+
+        for (int i = 0; i < words.length; i++) {
+            while(i + 1 < words.length && words[i + 1] - words[i] == 1) {
+                i++;
+            }
+            ans.append(words[i] - 'a' + 1);
         }
 
-        return ans;
+        for (char ch : nums) ans.append(ch);
+
+
+        System.out.println(Arrays.toString(words));
+        System.out.println(Arrays.toString(nums));
+        System.out.println(ans.toString());
+
+        return Long.parseLong(ans.toString());
     }
 }
