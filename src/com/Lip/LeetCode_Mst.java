@@ -1614,6 +1614,34 @@ class Solution_Mst {
         return new int[]{l, r};
     }
 
+    /*
+    面试题 16.15. 珠玑妙算
+    设置一个长26的数组map（目的是将RYGB对应到数组的index中）
+    遍历，如果solution和guess对应元素相等，则直接real++
+    若不相等，判断map中sol元素是否小于0（代表之前存过guess的元素），存在则fake++，然后更新map[sol - 'A']++;
+    对map中的guess元素做同等判断
+     */
+    public int[] masterMind(String solution, String guess) {
+        int fake = 0, real = 0;
+        int[] map = new int[26];
+
+        for(int i = 0; i < 4; i++){
+            char sol = solution.charAt(i), gue = guess.charAt(i);
+
+            if(sol == gue) real++;
+            else{
+                if(map[sol - 'A'] < 0) fake++;
+                map[sol - 'A']++;
+
+                if(map[gue - 'A'] > 0) fake++;
+                map[gue - 'A']--;
+            }
+        }
+
+        int[] ans = {real, fake};
+        return ans;
+    }
+
 
 }
 
