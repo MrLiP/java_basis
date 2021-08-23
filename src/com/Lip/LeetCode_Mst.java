@@ -1519,6 +1519,101 @@ class Solution_Mst {
         return theYear;
     }
 
+    /*
+    面试题 16.11. 跳水板
+    数学解法，考虑边界
+     */
+    public int[] divingBoard(int shorter, int longer, int k) {
+        if (k == 0) return new int[0];
+        if (shorter == longer) return new int[]{shorter * k};
+
+        int[] ans = new int[k + 1];
+        for (int i = 0; i <= k; i++) {
+            ans[i] = shorter * (k - i) + longer * i;
+        }
+
+        return ans;
+    }
+
+    /*
+    面试题 16.13. 平分正方形
+    求过两个正方形中心的直线即可，如果两者中心重合，取垂直于x轴的直线。再根据斜率判断与正方形哪条边相交。
+     */
+    public double[] cutSquares(int[] square1, int[] square2) {
+        //第一个正方形的中心点，x,y坐标及正方形边长
+        double x1 = square1[0] + square1[2]/2.0, y1 = square1[1] + square1[2]/2.0;
+        int d1 = square1[2];
+        //第二个正方形的中心点，x,y坐标及正方形边长
+        double x2 = square2[0] + square2[2]/2.0, y2 = square2[1] + square2[2]/2.0;
+        int d2 = square2[2];
+        //结果集
+        double[] res = new double[4];
+        //两个中心坐标在同一条x轴上，此时两条直线的斜率都是无穷大
+        if(x1 == x2){
+            res[0] = x1;
+            res[1] = Math.min(square1[1], square2[1]);
+            res[2] = x2;
+            res[3] = Math.max(square1[1] + d1, square2[1] + d2);
+        }else{
+            //斜率存在，则计算斜率
+            double k = (y1 - y2)/(x1 - x2);
+            double b = y1 - k*x1;
+            //斜率绝对值大于1，说明与正方形的上边和下边相交
+            if(Math.abs(k) > 1){
+                res[1] = Math.min(square1[1],square2[1]);
+                res[0] = (res[1] - b)/k;
+                res[3] = Math.max(square1[1] + d1,square2[1] + d2);
+                res[2] = (res[3] - b)/k;
+            }else{
+                //斜率绝对值小于等于1，说明与正方形的左边和右边相交
+                res[0] = Math.min(square1[0],square2[0]);
+                res[1] = res[0]*k + b;
+                res[2] = Math.max(square1[0] + d1,square2[0] + d2);
+                res[3] = res[2]*k + b;
+            }
+        }
+        // 题目要求x1 < x2,如果结果不满足，我们交换两个点的坐标即可
+        if(res[0] > res[2]){
+            swap(res, 0 ,2);
+            swap(res, 1, 3);
+        }
+        return res;
+    }
+
+    public void swap(double[] res, int x, int y){
+        double temp = res[x];
+        res[x] = res[y];
+        res[y] = temp;
+    }
+
+    /*
+    面试题 16.14. 最佳直线
+    动态规划
+    i从后往前遍历 dp[i][k]表示以i为开始节点[i,n)范围内斜率为k的最大数量
+    j 从后往前遍历 ,i j两点的斜率为k，则动态转移方程为dp[i][k] = dp[j][k] + 1，因为斜率相等则共线
+    因为斜率k是double类型，有无限多个，所以dp不能用二维数组表示，要用一维数组+哈希表
+    Double.NEGATIVE_INFINITY 负无穷 Double.POSITIVE_INFINITY 正无穷 Double.NaN 非数
+     */
+    public int[] bestLine(int[][] points) {
+        int n = points.length;
+        List<Map<Double, Integer>> dp = new ArrayList<>(n);
+        for (int i = 0; i < n; i++) dp.add(new HashMap<>());
+        int maxCnt = 0, l = 0, r = 0;
+        for (int i = n - 2; i >= 0; i--) {
+            for (int j = n - 1; j > i; j--) {
+                int dx = points[i][0] - points[j][0], dy = points[i][1] - points[j][1];
+                double k = dx == 0 ? Double.POSITIVE_INFINITY : dy == 0 ? 0 : (double) dy / dx;
+                int cnt = dp.get(j).getOrDefault(k, 1) + 1;
+                dp.get(i).put(k, cnt);
+                if (maxCnt > cnt) continue;
+                maxCnt = cnt;
+                l = i;
+                r = j;
+            }
+        }
+        return new int[]{l, r};
+    }
+
 
 }
 
