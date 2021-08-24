@@ -1642,6 +1642,56 @@ class Solution_Mst {
         return ans;
     }
 
+    /*
+    面试题 16.16. 部分排序
+    三个部分，左边的最大值必须小于其右边（中间和右边）的最小值，右边的最小值必须大于其左边（左边和中间）的最大值;
+    那么从左往右找的是最大值，如果出现小于左边最大值的情况，那么更新 rightindex，最后的 rightindex 右边的必然大于这个最大值;
+    从右往左找的是最小值，如果出现大于这个值的情况，那么更新 leftindex，最后的 leftindex 左边的必然小于这个最小值;
+     */
+    public int[] subSort(int[] array) {
+        if(array == null || array.length == 0 || array.length == 1) return new int[]{-1,-1};
+        int m = 0 , n = array.length - 1;
+        //注意：数组中的数可能为负数
+        int min = Integer.MAX_VALUE , max = Integer.MIN_VALUE;
+        //max为乱序的最大值，min为乱序的最小值
+        for(int i = 0 ; i < array.length ; i++){
+            if(max <= array[i]){
+                max = array[i];
+            }else{
+                //记录乱序数组小于最大值的最大索引
+                m = i;
+            }
+        }
+        for(int j = array.length - 1 ; j >= 0 ; j--){
+            if(min >= array[j]){
+                min = array[j];
+            }else{
+                //记录乱序数组大于最小值的最小索引
+                n = j;
+            }
+        }
+        return m > n ? new int[]{n,m} : new int[]{-1,-1};
+    }
+
+    /*
+    面试题 16.17. 连续数列
+    动态规划，分治
+     */
+    public int maxSubArray(int[] nums) {
+        int sum = nums[0], max = sum;
+
+        for (int i = 1; i < nums.length; i++) {
+            if (sum < 0) sum = 0;
+            sum += nums[i];
+            max = Math.max(max, sum);
+        }
+
+        return max;
+    }
+
+    /*
+    面试题 16.18. 模式匹配
+     */
 
 }
 
