@@ -1769,6 +1769,34 @@ class Solution_Mst {
         count += dfs(land, i+1, j-1);
         return count;
     }
+
+    /*
+    面试题 16.20. T9键盘
+    将 words 里的字母映射为数字，新建一个 26列的映射矩阵
+     */
+    public List<String> getValidT9Words(String num, String[] words) {
+        List<String> res = new ArrayList<>();
+        int length = num.length();
+        int[] key = {2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6,
+                7, 7, 7, 7, 8, 8, 8, 9, 9, 9, 9};
+        boolean flag;
+        for (String word: words) {
+            flag = true;
+            for (int i = 0; i < length; i++) {
+                if (num.charAt(i) != key[word.charAt(i) - 'a'] + '0') {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag)
+                res.add(word);
+        }
+        return res;
+    }
+
+    /*
+    面试题 16.21. 交换和
+     */
 }
 
 
