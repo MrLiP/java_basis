@@ -92,25 +92,32 @@ public class ALiBaBa {
         check(x1, y1 - 1, x2, y2, chs, temp + 1);
     }
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    private static int[][] pooling(int[][] arr1) {
+        int len = arr1.length;
+        int[][] arr2 = new int[len * 2][len * 2];
 
-        int T = sc.nextInt();
-        int[] result = new int[T];
-
-        for (int i = 0; i < T; i++) {
-            int n = sc.nextInt();
-            int m = sc.nextInt();
-            int x1 = sc.nextInt(), y1 = sc.nextInt(), x2 = sc.nextInt(), y2 = sc.nextInt();
-            char[][] chs = new char[n][m];
-            for (int j = 0; j < n; j++) {
-                chs[j] = sc.next().toCharArray();
+        for (int i = 0; i < len * 2; i++) {
+            for (int j = 0; j < len * 2; j++) {
+                if (i < len && j < len) {
+                    arr2[i][j] = arr1[i][j];
+                } else if (i >= len && j >= len){
+                    arr2[i][j] = arr1[i%len][j%len];
+                    arr2[i][j] += arr1[len/2 + (i%(len/2))][len/2+ (j%(len/2))];
+                } else if (i >= len) {
+                    arr2[i][j] = arr1[i%len][j%len];
+                    arr2[i][j] += arr1[len/2 + (i%(len/2))][j%(len/2)];
+                } else {
+                    arr2[i][j] = arr1[i%len][j%len];
+                    arr2[i][j] += arr1[i%(len/2)][len/2 + (j%(len/2))];
+                }
             }
-            result[i] = solution_3(n, m, x1 - 1, y1 - 1, x2 - 1, y2 - 1, chs);
         }
+        return arr2;
+    }
 
-        for (int res : result) {
-            System.out.println(res);
-        }
+    public static void main(String[] args) {
+        int[][] arr = new int[][]{{1,2}, {4, 3}};
+
+        System.out.println(Arrays.toString(pooling(arr)));
     }
 }
