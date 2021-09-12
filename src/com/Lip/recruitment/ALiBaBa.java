@@ -120,4 +120,5 @@ public class ALiBaBa {
 
         System.out.println(Arrays.toString(pooling(arr)));
     }
+
 }
