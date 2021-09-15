@@ -1,10 +1,10 @@
 package com.Lip.cls;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
-import java.lang.reflect.Array;
-import java.util.*;
-
-public class Main5{
+public class YingJiao {
     static int temp = 0;
 
     public static void main(String[] args) {
@@ -120,5 +120,3 @@ public class Main5{
         return ans;
     }
 }
-
-
