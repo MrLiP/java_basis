@@ -5,7 +5,27 @@ import java.util.Arrays;
 public class WangYi {
 
     public static void main(String[] args) {
+        solution_2(8);
 
+    }
+
+    static int count = 0;
+    static boolean flag1, flag2;
+
+    private static void solution_2(double s) {
+        int a = (int)(Math.log(s)/Math.log(2));
+
+        if (Math.pow(2, a) == s) {
+            return;
+        }
+        count++;
+        if ((s - Math.pow(2, a)) < (Math.pow(2, a + 1) - s)) {
+            flag1 = true;
+            solution_2(s - Math.pow(2, a));
+        } else {
+            flag2 = true;
+            solution_2(Math.pow(2, a + 1) - s);
+        }
     }
 
     // "azbA5#1@c"
