@@ -5,27 +5,38 @@ import java.util.Arrays;
 public class WangYi {
 
     public static void main(String[] args) {
-        solution_2(8);
+        int s = 39;
+        // if (s == 0) System.out.println(-1);
 
+        solution_2_incr(s);
+        solution_2_decr(s);
+
+        System.out.println(Math.min(count1, count2));
     }
 
-    static int count = 0;
-    static boolean flag1, flag2;
+    static int count1 = 0;
+    static int count2 = 0;
 
-    private static void solution_2(double s) {
+    private static void solution_2_incr(double s) {
         int a = (int)(Math.log(s)/Math.log(2));
+        count1++;
 
         if (Math.pow(2, a) == s) {
             return;
         }
-        count++;
-        if ((s - Math.pow(2, a)) < (Math.pow(2, a + 1) - s)) {
-            flag1 = true;
-            solution_2(s - Math.pow(2, a));
-        } else {
-            flag2 = true;
-            solution_2(Math.pow(2, a + 1) - s);
+
+        solution_2_incr(s - Math.pow(2, a));
+    }
+
+    private static void solution_2_decr(double s) {
+        int a = (int)(Math.log(s)/Math.log(2));
+        count2++;
+
+        if (Math.pow(2, a) == s) {
+            return;
         }
+
+        solution_2_decr(Math.pow(2, a + 1) - s);
     }
 
     // "azbA5#1@c"
