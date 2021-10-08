@@ -9,16 +9,16 @@ public class HuaWei {
         // please define the JAVA input here. For example: Scanner s = new Scanner(System.in);
         // please finish the function body here.
         // please define the JAVA output here. For example: System.out.println(s.nextInt());
-//        Scanner sc = new Scanner(System.in);
-//        int t = sc.nextInt();
-//
-//        int[] nums = new int[t];
-//
-//        for (int i = 0; i < t; i++) {
-//            nums[i] = sc.nextInt();
-//        }
-//
-//        System.out.println(solution_3(nums, t));
+        Scanner sc = new Scanner(System.in);
+        int t = sc.nextInt();
+
+        int[] nums = new int[t];
+
+        for (int i = 0; i < t; i++) {
+            nums[i] = sc.nextInt();
+        }
+
+        System.out.println(solution_3(nums, t));
 
         System.out.println(solution_1("0002:0000:0000:0000:0000:0100:0000:0000"));
     }
